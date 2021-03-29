@@ -12,6 +12,10 @@
     "test": "npm run build && node -r source-map-support/register lib/test/basic.js",
     "prepublish": "npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2bbb/node-2bit-osc.git"
+  },
   "keywords": [
     "osc",
     "opensoundcontrol",
@@ -19,6 +23,10 @@
   ],
   "author": "ISHII 2bit",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/2bbb/node-2bit-osc/issues"
+  },
+  "homepage": "https://github.com/2bbb/node-2bit-osc#readme",
   "dependencies": {
     "@types/osc-min": "npm:@2bit/types-osc-min@^1.0.1",
     "osc-min": "^1.1.2"
