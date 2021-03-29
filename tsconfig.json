@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "ES2017",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "strict": true,
+        "declaration": true,
+        "pretty": true,
+        "removeComments": false,
+        "inlineSourceMap": true,
+        "outDir": "./lib",
+        "esModuleInterop": true,
+        "lib": ["DOM", "ES2017", "ES2018", "ES2019"]
+    },
+    "include": [
+        "./src/**/*.ts"
+    ]
+}
