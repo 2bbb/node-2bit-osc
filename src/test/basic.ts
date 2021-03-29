@@ -9,7 +9,23 @@ async function sendTestMessage() {
     await new Promise(resolve => setTimeout(resolve, 500));
     const bundle: Osc.Bundle = {
         timetag: 0,
-        elements: [],
+        elements: [{
+            oscType: 'message',
+            address: '/bundled/1',
+            args: [],
+        }, {
+            oscType: 'message',
+            address: '/bundled/2',
+            args: [],
+        }, {
+            oscType: 'bundle',
+            timetag: 0,
+            elements: [{
+                oscType: 'message',
+                address: '/bundled/nested',
+                args: []
+            }]
+        }],
         oscType: 'bundle'
     };
     client.send(bundle);
