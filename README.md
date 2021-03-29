@@ -6,6 +6,12 @@ osc client/server written by typescript
 * influened by [node-osc](https://www.npmjs.com/package/node-osc)
 * **this package is in development phase**
 
+## install
+
+```
+npm i @2bit/osc
+```
+
 ## API
 
 ### Client
