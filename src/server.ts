@@ -1,4 +1,4 @@
-import * as Osc from './types';
+import * as Osc from './module/types';
 
 import oscmin = require("osc-min");
 
@@ -12,15 +12,15 @@ export namespace Server {
     };
 }
 
-function make_args(args: oscmin.OscArgument[]) {
+export interface ArgumentArray {
+    [Symbol.iterator](): Iterator<Osc.ValueType>;
+    raw: Osc.Argument[];
+}
+
+function make_args(args: oscmin.OscArgument[]): ArgumentArray {
     const values: any = args.map(arg => arg.value);
     values.raw = args;
     return values;
-}
-
-export interface ArgumentArray {
-    [Symbol.iterator](): Iterator<Osc.Value>;
-    raw: Osc.Argument[];
 }
 
 export default class Server extends EventEmitter {
@@ -98,6 +98,9 @@ export default class Server extends EventEmitter {
     private emitMessage(message: oscmin.OscMessage, rinfo: dgram.RemoteInfo): void {
         this.emit('message', message.address, make_args(message.args), rinfo);
         this.emit(message.address, make_args(message.args), rinfo);
+        if(this.listenerCount(message.address) == 0) {
+            this.emit('leaked', message.address, make_args(message.args), rinfo);
+        }
     }
 
     private emitBundle(bundle: oscmin.OscBundle, rinfo: dgram.RemoteInfo): void {
@@ -114,11 +117,12 @@ export default class Server extends EventEmitter {
     on(event: 'listening', callback: () => void): this;
     on(event: 'error', callback: (err: Error) => void): this;
     on(event: 'message', listener: (address: string, args: ArgumentArray, rinfo: dgram.RemoteInfo) => void): this;
-    on(event: 'bundle', listener: (bundle: Osc.Bundle, rinfo: dgram.RemoteInfo) => void): this;
+    on(event: 'leaked', listener: (address: string, args: ArgumentArray, rinfo: dgram.RemoteInfo) => void): this;
+    on(event: 'bundle', listener: (bundle: Osc.BundleInterface, rinfo: dgram.RemoteInfo) => void): this;
     on(event: 'parse_error', listener: (err: Error, buffer: Buffer, rinfo: dgram.RemoteInfo) => void): this;
     on(event: string, listener: (args: ArgumentArray, rinfo: dgram.RemoteInfo) => void): this;
 
-    on(event: string | symbol, listener: (... args: any[]) => void): this {
+    on(event: string, listener: (... args: any[]) => void): this {
 	    return super.on(event, listener);
     }
 }
