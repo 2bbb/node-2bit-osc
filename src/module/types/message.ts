@@ -1,6 +1,6 @@
 import * as Convert from './convert';
 import { Argument, ArgumentLike } from './argument';
-import { ValueType, ValueTypeMap } from './value';
+import { TypeName, TypeNameToValueType } from './value';
 
 export interface MessageInterface {
     address: string;
@@ -21,7 +21,7 @@ export class Message implements MessageInterface {
         this.args.push(Convert.toArgument(arg), ... args.map(arg => Convert.toArgument(arg)));
         return this;
     }
-    addWithType<T extends ValueType>(type: T, value: ValueTypeMap[T]): this {
+    addWithType<T extends TypeName>(type: T, value: TypeNameToValueType[T]): this {
         this.args.push({ type: type, value });
         return this;
     }

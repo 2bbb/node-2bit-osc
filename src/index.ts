@@ -1,4 +1,6 @@
 export * from './module/types';
+export * from './client';
+export * from './server';
 import Client from './client';
-import Server, { ArgumentArray } from './server';
-export { Client, Server, ArgumentArray };
+import Server from './server';
+export { Client, Server };

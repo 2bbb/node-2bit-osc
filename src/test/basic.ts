@@ -19,7 +19,13 @@ async function sendTestMessage() {
 }
 
 async function test() {
-    const server = new Osc.Server(33333, {
+    type TestServerMessages = {
+        "/raw_sequence": [ number, number, number, string ];
+        "/typed": { raw: Osc.Argument[] };
+        "/finish_test": [];
+    };
+
+    const server = new Osc.Server<TestServerMessages>(33333, {
         host: '0.0.0.0',
     });
 
@@ -51,7 +57,7 @@ async function test() {
         console.log("/raw_sequence", a, b, c, str, rinfo);
     });
 
-    server.on('/typed', ({raw}, rinfo) => {
+    server.on('/typed', ({ raw }, rinfo) => {
         console.log("/typed", raw, rinfo);
     });
 

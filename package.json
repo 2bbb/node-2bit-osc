@@ -8,6 +8,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
+    "watch": "tsc -w",
     "clean": "tsc --build --clean",
     "test": "npm run build && node -r source-map-support/register lib/test/basic.js",
     "prepublish": "npm run build"

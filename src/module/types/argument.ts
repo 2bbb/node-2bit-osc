@@ -1,9 +1,9 @@
-import { ValueType, ValueTypeMap, BufferLike } from './value';
+import { TypeName, TypeNameToValueType, BufferLike } from './value';
 
-export interface SpecifiedArgument<T extends ValueType> {
+export type SpecifiedArgument<T extends TypeName> = {
     type: T;
-    value: ValueTypeMap[T];
+    value: TypeNameToValueType[T];
 }
 
-export type Argument = SpecifiedArgument<ValueType>;
-export type ArgumentLike = Argument | ValueTypeMap[ValueType] | BufferLike;
+export type Argument = SpecifiedArgument<TypeName>;
+export type ArgumentLike = Argument | TypeNameToValueType[TypeName] | BufferLike;

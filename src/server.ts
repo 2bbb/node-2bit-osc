@@ -20,10 +20,24 @@ export interface ArgumentArray {
 function make_args(args: oscmin.OscArgument[]): ArgumentArray {
     const values: any = args.map(arg => arg.value);
     values.raw = args;
-    return values;
+    return values as ArgumentArray;
 }
 
-export default class Server extends EventEmitter {
+export type BaseMessageTypeDeclarations = {
+    [ key: string ]: (Osc.ValueType[] | { raw: Osc.Argument[] })
+};
+
+type Listener<
+    MessageTypeDeclarations extends BaseMessageTypeDeclarations,
+    Event extends keyof MessageTypeDeclarations,
+> = (args: MessageTypeDeclarations[Event], rinfo: dgram.RemoteInfo) => void
+
+type DisablableString<T extends boolean> = T extends true ? never : string;
+
+export default class Server<
+    MessageTypeDeclarations extends BaseMessageTypeDeclarations = {},
+    OnlyTypeStrictMessageMode extends boolean = false
+> extends EventEmitter {
     private socket: dgram.Socket;
     public readonly options: Server.Options;
     constructor(public readonly port: number,
@@ -116,12 +130,18 @@ export default class Server extends EventEmitter {
     on(event: 'bind', callback: (with_reuseAddr: boolean) => void): this;
     on(event: 'listening', callback: () => void): this;
     on(event: 'error', callback: (err: Error) => void): this;
+
     on(event: 'message', listener: (address: string, args: ArgumentArray, rinfo: dgram.RemoteInfo) => void): this;
     on(event: 'leaked', listener: (address: string, args: ArgumentArray, rinfo: dgram.RemoteInfo) => void): this;
     on(event: 'bundle', listener: (bundle: Osc.BundleInterface, rinfo: dgram.RemoteInfo) => void): this;
     on(event: 'parse_error', listener: (err: Error, buffer: Buffer, rinfo: dgram.RemoteInfo) => void): this;
-    on(event: string, listener: (args: ArgumentArray, rinfo: dgram.RemoteInfo) => void): this;
-
+    
+    on<Event extends keyof MessageTypeDeclarations>(
+        event: Event,
+        listener: Listener<MessageTypeDeclarations, Event>
+    ): this;
+    
+    on(event: DisablableString<OnlyTypeStrictMessageMode>, listener: (args: ArgumentArray, rinfo: dgram.RemoteInfo) => void): this;
     on(event: string, listener: (... args: any[]) => void): this {
 	    return super.on(event, listener);
     }
