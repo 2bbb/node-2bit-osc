@@ -24,6 +24,10 @@ export default class Client {
         });
     }
 
+    setBroadcast(enabled: boolean): void {
+        this.socket.setBroadcast(enabled);
+    }
+
     // declare overload parameters
     async send(message: Osc.MessageInterface): Promise<number>;
     async send(message: Osc.BundleInterface): Promise<number>;
