@@ -8,7 +8,7 @@ export namespace Client {
 }
 
 export default class Client {
-    private socket: dgram.Socket;
+    public readonly socket: dgram.Socket;
     public readonly options: Client.Options;
     constructor(public readonly host: string,
                 public readonly port: number,
@@ -23,11 +23,7 @@ export default class Client {
             reuseAddr: true
         });
     }
-
-    setBroadcast(enabled: boolean): void {
-        this.socket.setBroadcast(enabled);
-    }
-
+    
     // declare overload parameters
     async send(message: Osc.MessageInterface): Promise<number>;
     async send(message: Osc.BundleInterface): Promise<number>;
